@@ -74,8 +74,8 @@ $langs = [1 => 'Pascal', 2 => 'C', 3 => 'C++', 4 => 'JavaScript', 5 => 'PHP', 6 
             <div class="field">
                 <label>Пол</label>
                 <div class="radio-group">
-                    <label><input type="radio" name="gender" value="M" <?= ($values['gender'] ?? '') == 'M' ? 'checked' : '' ?>> М</label>
-                    <label><input type="radio" name="gender" value="F" <?= ($values['gender'] ?? '') == 'F' ? 'checked' : '' ?>> Ж</label>
+                    <label><input type="radio" name="gender" value="male" <?= ($values['gender'] ?? '') == 'male' ? 'checked' : '' ?>> М</label>
+                    <label><input type="radio" name="gender" value="female" <?= ($values['gender'] ?? '') == 'female' ? 'checked' : '' ?>> Ж</label>
                 </div>
                 <?php if(isset($errors['gender'])): ?><div class="error-text"><?= htmlspecialchars($_COOKIE['gender_error'] ?? 'Выберите пол') ?></div><?php endif; ?>
             </div>

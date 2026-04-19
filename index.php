@@ -161,7 +161,8 @@ if (isset($_SESSION['user_id'])) {
     }
     
     if (isset($_SESSION['admin_mode'])) {
-        setcookie('save_success', 'Данные пользователя успешно обновлены!', time() + 24*3600);
+        unset($_SESSION['admin_mode']);
+        setcookie('save_success', 'Данные пользователя обновлены!', time() + 24*3600);
         header("Location: admin.php");
     } else {
         setcookie('save_success', 'Данные успешно обновлены!', time() + 24*3600);

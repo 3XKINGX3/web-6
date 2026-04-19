@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $values['languages'] = explode(',', $_COOKIE['languages_value']);
         } else {
             $stmt_l = $pdo->prepare("SELECT language_id FROM application_languages WHERE application_id=?");
-            $stmt_l->execute([$row['id']]);
+            $stmt_l->execute([$_SESSION['user_id']]);
             $values['languages'] = $stmt_l->fetchAll(PDO::FETCH_COLUMN);
         }
     } else {
@@ -82,19 +82,7 @@ $bio = $_POST['biography'] ?? '';
 $contract = isset($_POST['contract']);
 
 if (!preg_match('/^[a-zA-Zа-яА-ЯёЁ\s\-]+$/u', $fio)) {
-    setcookie('fio_error', 'Заполните ФИО (только буквы)', time() + 24*3600);
-    $errors = true;
-}
-if (!preg_match('/^[0-9+\-\s()]+$/', $phone)) {
-    setcookie('phone_error', 'Неверный телефон', time() + 24*3600);
-    $errors = true;
-}
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    setcookie('email_error', 'Неверный email', time() + 24*3600);
-    $errors = true;
-}
-if (empty($birth)) {
-    setcookie('birth_error', 'Укажите дату', time() + 24*3600);
+    setcookie('fio_error', 'Заполните ФИО', time() + 24*3600);
     $errors = true;
 }
 if (empty($gender)) {
@@ -103,14 +91,6 @@ if (empty($gender)) {
 }
 if (empty($languages)) {
     setcookie('languages_error', 'Выберите языки', time() + 24*3600);
-    $errors = true;
-}
-if (empty($bio)) {
-    setcookie('bio_error', 'Заполните биографию', time() + 24*3600);
-    $errors = true;
-}
-if (!$contract) {
-    setcookie('contract_error', 'Нужно согласие', time() + 24*3600);
     $errors = true;
 }
 
@@ -166,7 +146,7 @@ if (isset($_SESSION['user_id'])) {
         $stmt_l->execute([$id, $l_id]);
     }
 
-    setcookie('save_success', 'Данные сохранены! Логин: ' . $login . ' Пароль: ' . $pass, time() + 24*3600);
+    setcookie('save_success', 'Данные сохранены!', time() + 24*3600);
     header("Location: index.php");
 }
 exit();

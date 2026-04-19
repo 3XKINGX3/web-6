@@ -2,30 +2,25 @@
 if (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
     list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) = explode(':', base64_decode(substr($_SERVER['REDIRECT_HTTP_AUTHORIZATION'], 6)));
 }
-
 $db_user = 'u82373';
 $db_pass = '4362231';
 $pdo = new PDO('mysql:host=localhost;dbname=u82373;charset=utf8', $db_user, $db_pass, [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
 ]);
-
 if (!isset($_SERVER['PHP_AUTH_USER'])) {
     header('WWW-Authenticate: Basic realm="Admin Panel"');
     header('HTTP/1.0 401 Unauthorized');
     exit();
 }
-
 $stmt = $pdo->prepare("SELECT password_hash FROM admins WHERE login = ?");
 $stmt->execute([$_SERVER['PHP_AUTH_USER']]);
 $admin = $stmt->fetch();
-
 if (!$admin || !password_verify($_SERVER['PHP_AUTH_PW'], $admin['password_hash'])) {
     header('WWW-Authenticate: Basic realm="Admin Panel"');
     header('HTTP/1.0 401 Unauthorized');
     exit();
 }
-
 if (isset($_GET['delete'])) {
     $id = (int)$_GET['delete'];
     $pdo->prepare("DELETE FROM application_languages WHERE application_id = ?")->execute([$id]);
@@ -33,14 +28,7 @@ if (isset($_GET['delete'])) {
     header('Location: admin.php');
     exit();
 }
-
-$stats = $pdo->query("
-    SELECT l.name, COUNT(al.application_id) as count 
-    FROM languages l 
-    LEFT JOIN application_languages al ON l.id = al.language_id 
-    GROUP BY l.id
-")->fetchAll();
-
+$stats = $pdo->query("SELECT l.name, COUNT(al.application_id) as count FROM languages l LEFT JOIN application_languages al ON l.id = al.language_id GROUP BY l.id")->fetchAll();
 $users = $pdo->query("SELECT * FROM applications")->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -67,9 +55,7 @@ $users = $pdo->query("SELECT * FROM applications")->fetchAll();
         <?php endforeach; ?>
     </div>
     <table>
-        <tr>
-            <th>ID</th><th>ФИО</th><th>Email</th><th>Логин</th><th>Действия</th>
-        </tr>
+        <tr><th>ID</th><th>ФИО</th><th>Email</th><th>Логин</th><th>Действия</th></tr>
         <?php foreach ($users as $u): ?>
         <tr>
             <td><?= $u['id'] ?></td>

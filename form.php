@@ -2,17 +2,7 @@
 $values = $values ?? [];
 $errors = $errors ?? [];
 $messages = $messages ?? [];
-$langs = [
-    1 => 'Pascal',
-    2 => 'C',
-    3 => 'C++',
-    4 => 'JavaScript',
-    5 => 'PHP',
-    6 => 'Python',
-    7 => 'Java',
-    8 => 'Haskell',
-    9 => 'C#'
-];
+$langs = [1 => 'Pascal', 2 => 'C', 3 => 'C++', 4 => 'JavaScript', 5 => 'PHP', 6 => 'Python', 7 => 'Java', 8 => 'Haskell', 9 => 'C#'];
 ?>
 <!DOCTYPE html>
 <html lang="ru">

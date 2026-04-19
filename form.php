@@ -2,12 +2,23 @@
 $values = $values ?? [];
 $errors = $errors ?? [];
 $messages = $messages ?? [];
+$langs = [
+    1 => 'Pascal',
+    2 => 'C',
+    3 => 'C++',
+    4 => 'JavaScript',
+    5 => 'PHP',
+    6 => 'Python',
+    7 => 'Java',
+    8 => 'Haskell',
+    9 => 'C#'
+];
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Задание 5</title>
+    <title>Задание 6</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 40px 20px; }
         .container { background: white; padding: 30px; border-radius: 12px; max-width: 500px; width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
@@ -36,43 +47,49 @@ $messages = $messages ?? [];
         <div class="header">
             <span style="font-size: 18px; font-weight: bold;">Анкета</span>
             <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="?logout=1" class="auth-btn logout-btn">Выйти (ID: <?= $_SESSION['user_id'] ?>)</a>
+                <a href="index.php?logout=1" class="auth-btn logout-btn">Выйти (ID: <?= $_SESSION['user_id'] ?>)</a>
             <?php else: ?>
                 <a href="login.php" class="auth-btn login-btn">Войти</a>
             <?php endif; ?>
         </div>
-        <form method="POST">
+        <form action="index.php" method="POST">
             <?php foreach ($messages as $msg): ?>
                 <div class="msg-box msg-success"><?= $msg ?></div>
             <?php endforeach; ?>
+
             <div class="field">
                 <label>ФИО</label>
                 <input name="fio" value="<?= htmlspecialchars($values['fio'] ?? '') ?>" class="<?= isset($errors['fio'])?'error-field':'' ?>">
                 <?php if(isset($errors['fio'])): ?><div class="error-text"><?= htmlspecialchars($_COOKIE['fio_error'] ?? '') ?></div><?php endif; ?>
             </div>
+
             <div class="field">
                 <label>Телефон</label>
                 <input name="phone" value="<?= htmlspecialchars($values['phone'] ?? '') ?>" class="<?= isset($errors['phone'])?'error-field':'' ?>">
                 <?php if(isset($errors['phone'])): ?><div class="error-text"><?= htmlspecialchars($_COOKIE['phone_error'] ?? '') ?></div><?php endif; ?>
             </div>
+
             <div class="field">
                 <label>Email</label>
                 <input name="email" type="email" value="<?= htmlspecialchars($values['email'] ?? '') ?>" class="<?= isset($errors['email'])?'error-field':'' ?>">
                 <?php if(isset($errors['email'])): ?><div class="error-text"><?= htmlspecialchars($_COOKIE['email_error'] ?? '') ?></div><?php endif; ?>
             </div>
+
             <div class="field">
                 <label>Дата рождения</label>
                 <input name="birth_date" type="date" value="<?= htmlspecialchars($values['birth_date'] ?? '') ?>" class="<?= isset($errors['birth'])?'error-field':'' ?>">
-                <?php if(isset($errors['birth'])): ?><div class="error-text"><?= htmlspecialchars($_COOKIE['birth_error'] ?? '') ?></div><?php endif; ?>
+                <?php if(isset($errors['birth'])): ?><div class="error-text"><?= htmlspecialchars($_COOKIE['birth_error'] ?? 'Неверная дата') ?></div><?php endif; ?>
             </div>
+
             <div class="field">
                 <label>Пол</label>
                 <div class="radio-group">
-                    <label><input type="radio" name="gender" value="male" <?= ($values['gender'] ?? '') == 'male' ? 'checked' : '' ?>> М</label>
-                    <label><input type="radio" name="gender" value="female" <?= ($values['gender'] ?? '') == 'female' ? 'checked' : '' ?>> Ж</label>
+                    <label><input type="radio" name="gender" value="M" <?= ($values['gender'] ?? '') == 'M' ? 'checked' : '' ?>> М</label>
+                    <label><input type="radio" name="gender" value="F" <?= ($values['gender'] ?? '') == 'F' ? 'checked' : '' ?>> Ж</label>
                 </div>
                 <?php if(isset($errors['gender'])): ?><div class="error-text"><?= htmlspecialchars($_COOKIE['gender_error'] ?? 'Выберите пол') ?></div><?php endif; ?>
             </div>
+
             <div class="field">
                 <label>Языки программирования</label>
                 <select name="languages[]" multiple size="6" class="<?= isset($errors['languages'])?'error-field':'' ?>">
@@ -82,17 +99,20 @@ $messages = $messages ?? [];
                 </select>
                 <?php if(isset($errors['languages'])): ?><div class="error-text"><?= htmlspecialchars($_COOKIE['languages_error'] ?? '') ?></div><?php endif; ?>
             </div>
+
             <div class="field">
                 <label>Биография</label>
                 <textarea name="biography" rows="4" class="<?= isset($errors['bio'])?'error-field':'' ?>"><?= htmlspecialchars($values['biography'] ?? '') ?></textarea>
                 <?php if(isset($errors['bio'])): ?><div class="error-text"><?= htmlspecialchars($_COOKIE['bio_error'] ?? '') ?></div><?php endif; ?>
             </div>
+
             <div class="field">
                 <label style="font-weight: normal; font-size: 14px;">
                     <input type="checkbox" name="contract" <?= !empty($values['contract']) ? 'checked' : '' ?>> Согласен с условиями
                 </label>
                 <?php if(isset($errors['contract'])): ?><div class="error-text"><?= htmlspecialchars($_COOKIE['contract_error'] ?? '') ?></div><?php endif; ?>
             </div>
+
             <button type="submit"><?= isset($_SESSION['user_id']) ? 'Обновить данные' : 'Отправить' ?></button>
         </form>
     </div>

@@ -7,7 +7,7 @@ $messages = $messages ?? [];
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Задание 5</title>
+    <title>Задание 6</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 40px 20px; }
         .container { background: white; padding: 30px; border-radius: 12px; max-width: 500px; width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }

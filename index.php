@@ -139,3 +139,4 @@ if (isset($_SESSION['user_id'])) {
     $id = $_SESSION['user_id'];
     $stmt = $pdo->prepare("UPDATE applications SET fio=?, phone=?, email=?, birth_date=?, gender=?, biography=? WHERE id=?");
     $stmt->execute([$fio, $phone
+}

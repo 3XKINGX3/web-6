@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $values['fio'] = $_COOKIE['fio_value'] ?? ($row['fio'] ?? '');
         $values['phone'] = $_COOKIE['phone_value'] ?? ($row['phone'] ?? '');
         $values['email'] = $_COOKIE['email_value'] ?? ($row['email'] ?? '');
-        $values['birth_date'] = $_COOKIE['birth_value'] ?? ($row['birth_date'] ?? '');
+        $values['birth_date'] = $_COOKIE['birth_date_value'] ?? ($row['birth_date'] ?? '');
         $values['gender'] = $_COOKIE['gender_value'] ?? ($row['gender'] ?? '');
         $values['biography'] = $_COOKIE['bio_value'] ?? ($row['biography'] ?? '');
         $values['contract'] = 1;
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $values['fio'] = $_COOKIE['fio_value'] ?? '';
         $values['phone'] = $_COOKIE['phone_value'] ?? '';
         $values['email'] = $_COOKIE['email_value'] ?? '';
-        $values['birth_date'] = $_COOKIE['birth_value'] ?? '';
+        $values['birth_date'] = $_COOKIE['birth_date_value'] ?? '';
         $values['gender'] = $_COOKIE['gender_value'] ?? '';
         $values['biography'] = $_COOKIE['bio_value'] ?? '';
         $values['contract'] = $_COOKIE['contract_value'] ?? '';
@@ -82,22 +82,22 @@ $bio = $_POST['biography'] ?? '';
 $contract = isset($_POST['contract']);
 
 if (!preg_match('/^[a-zA-Zа-яА-ЯёЁ\s\-]+$/u', $fio)) {
-    setcookie('fio_error', 'Заполните ФИО', time() + 24*3600);
+    setcookie('fio_error', '1', time() + 24*3600);
     $errors = true;
 }
 if (empty($gender)) {
-    setcookie('gender_error', 'Выберите пол', time() + 24*3600);
+    setcookie('gender_error', '1', time() + 24*3600);
     $errors = true;
 }
 if (empty($languages)) {
-    setcookie('languages_error', 'Выберите языки', time() + 24*3600);
+    setcookie('languages_error', '1', time() + 24*3600);
     $errors = true;
 }
 
 setcookie('fio_value', $fio, time() + 365*24*3600);
 setcookie('phone_value', $phone, time() + 365*24*3600);
 setcookie('email_value', $email, time() + 365*24*3600);
-setcookie('birth_value', $birth, time() + 365*24*3600);
+setcookie('birth_date_value', $birth, time() + 365*24*3600);
 setcookie('gender_value', $gender, time() + 365*24*3600);
 setcookie('languages_value', implode(',', $languages), time() + 365*24*3600);
 setcookie('bio_value', $bio, time() + 365*24*3600);
@@ -108,7 +108,7 @@ if ($errors) {
     exit();
 }
 
-foreach(['fio','phone','email','birth','gender','languages','bio','contract'] as $f) {
+foreach(['fio','phone','email','birth_date','gender','languages','bio','contract'] as $f) {
     setcookie($f.'_value', '', 100000);
 }
 
@@ -126,10 +126,10 @@ if (isset($_SESSION['user_id'])) {
     if (isset($_SESSION['admin_mode'])) {
         unset($_SESSION['admin_mode']);
         unset($_SESSION['user_id']);
-        setcookie('save_success', 'Данные обновлены админом', time() + 24*3600);
+        setcookie('save_success', 'Данные обновлены', time() + 24*3600);
         header("Location: admin.php");
     } else {
-        setcookie('save_success', 'Данные обновлены', time() + 24*3600);
+        setcookie('save_success', 'Данные сохранены', time() + 24*3600);
         header("Location: index.php");
     }
 } else {
@@ -146,7 +146,6 @@ if (isset($_SESSION['user_id'])) {
         $stmt_l->execute([$id, $l_id]);
     }
 
-    setcookie('save_success', 'Данные сохранены!', time() + 24*3600);
+    setcookie('save_success', 'Логин: ' . $login . ' Пароль: ' . $pass, time() + 24*3600);
     header("Location: index.php");
 }
-exit();

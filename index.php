@@ -95,7 +95,8 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 $birth_ts = strtotime($birth);
-if (!$birth_ts || $birth_ts > time() || date('Y', $birth_ts) < 1900) {
+$current_year = (int)date('Y');
+if (!$birth_ts || $birth_ts > time() || (int)date('Y', $birth_ts) < 1900 || (int)date('Y', $birth_ts) > $current_year) {
     setcookie('birth_error', 'Укажите реальную дату рождения', time() + 24*3600);
     $errors = true;
 }
@@ -127,49 +128,4 @@ setcookie('bio_value', $bio, time() + 365*24*3600);
 
 if ($errors) {
     $redir = isset($_SESSION['admin_mode']) ? "index.php?edit_id=".$_SESSION['user_id'] : "index.php";
-    header("Location: $redir");
-    exit();
-}
-
-foreach(['fio','phone','email','birth','gender','languages','bio','contract'] as $f) {
-    setcookie($f.'_value', '', 100000);
-}
-
-if (isset($_SESSION['user_id'])) {
-    $id = $_SESSION['user_id'];
-    $stmt = $pdo->prepare("UPDATE applications SET fio=?, phone=?, email=?, birth_date=?, gender=?, biography=? WHERE id=?");
-    $stmt->execute([$fio, $phone, $email, $birth, $gender, $bio, $id]);
-
-    $pdo->prepare("DELETE FROM application_languages WHERE application_id=?")->execute([$id]);
-    $stmt_l = $pdo->prepare("INSERT INTO application_languages (application_id, language_id) VALUES (?, ?)");
-    foreach ($languages as $l_id) { 
-        $stmt_l->execute([$id, $l_id]); 
-    }
-    
-    if (isset($_SESSION['admin_mode'])) {
-        setcookie('save_success', 'Данные обновлены админом', time() + 24*3600);
-        unset($_SESSION['admin_mode']);
-        unset($_SESSION['user_id']);
-        header("Location: admin.php");
-    } else {
-        setcookie('save_success', 'Данные успешно обновлены!', time() + 24*3600);
-        header("Location: index.php");
-    }
-} else {
-    $login = 'user' . rand(1000, 9999);
-    $pass = bin2hex(random_bytes(4));
-    $hash = password_hash($pass, PASSWORD_DEFAULT);
-
-    $stmt = $pdo->prepare("INSERT INTO applications (fio, phone, email, birth_date, gender, biography, login, password_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$fio, $phone, $email, $birth, $gender, $bio, $login, $hash]);
-    $id = $pdo->lastInsertId();
-
-    $stmt_l = $pdo->prepare("INSERT INTO application_languages (application_id, language_id) VALUES (?, ?)");
-    foreach ($languages as $l_id) {
-        $stmt_l->execute([$id, $l_id]);
-    }
-
-    setcookie('save_success', 'Данные сохранены! Логин: ' . $login . ' Пароль: ' . $pass, time() + 24*3600);
-    header("Location: index.php");
-}
-exit();
+    header

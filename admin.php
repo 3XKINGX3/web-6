@@ -1,4 +1,8 @@
 <?php
+if (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+    list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) = explode(':', base64_decode(substr($_SERVER['REDIRECT_HTTP_AUTHORIZATION'], 6)));
+}
+
 $db_user = 'u82373';
 $db_pass = '4362231';
 $pdo = new PDO('mysql:host=localhost;dbname=u82373;charset=utf8', $db_user, $db_pass, [
@@ -56,14 +60,12 @@ $users = $pdo->query("SELECT * FROM applications")->fetchAll();
 </head>
 <body>
     <h1>Панель администратора</h1>
-    
     <div class="stats">
         <h3>Статистика по языкам</h3>
         <?php foreach ($stats as $s): ?>
             <div><?= htmlspecialchars($s['name']) ?>: <strong><?= $s['count'] ?></strong></div>
         <?php endforeach; ?>
     </div>
-
     <table>
         <tr>
             <th>ID</th><th>ФИО</th><th>Email</th><th>Логин</th><th>Действия</th>
@@ -76,7 +78,7 @@ $users = $pdo->query("SELECT * FROM applications")->fetchAll();
             <td><?= htmlspecialchars($u['login'] ?? '—') ?></td>
             <td>
                 <a href="index.php?edit_id=<?= $u['id'] ?>" class="btn-edit">Редактировать</a>
-                <a href="?delete=<?= $u['id'] ?>" class="btn-del" onclick="return confirm('Удалить пользователя?')">Удалить</a>
+                <a href="?delete=<?= $u['id'] ?>" class="btn-del" onclick="return confirm('Удалить?')">Удалить</a>
             </td>
         </tr>
         <?php endforeach; ?>
